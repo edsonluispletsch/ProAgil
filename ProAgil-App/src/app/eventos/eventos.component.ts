@@ -1,5 +1,7 @@
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { Evento } from '../_models/Evento';
+import { EventoService } from '../_services/evento.service';
 
 @Component({
   selector: 'app-eventos',
@@ -8,7 +10,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EventosComponent implements OnInit {
 
-  _filtroLista: string = "";
+  eventosFiltrados: Evento[] = [];
+  eventos: Evento[] = [];
+  imagemLargura: number = 50;
+  imagemMargem: number = 2;
+  mostrarImagem = false;
+  modalRef: BsModalRef | any;
+   
+  _filtroLista: string = '';
+
+  constructor(
+    private eventoService: EventoService,
+    private modalService: BsModalService) { }
+
   get filtroLista():string {
     return this._filtroLista;
   }
@@ -16,20 +30,16 @@ export class EventosComponent implements OnInit {
     this._filtroLista = value;
     this.eventosFiltrados = this.filtroLista ? this.filtrarEventos(this.filtroLista) : this.eventosFiltrados;
   }
-  
-  eventosFiltrados: any = [];
-  eventos: any = [];
-  imagemLargura: number = 50;
-  imagemMargem: number = 2;
-  mostrarImagem = false;
-   
-  constructor(private http: HttpClient) { }
 
+  openModal(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template);
+  }
+  
   ngOnInit() {
     this.getEventos();
   }
 
-  filtrarEventos(filtrarPor: string): any {
+  filtrarEventos(filtrarPor: string): Evento[] {
     filtrarPor = filtrarPor.toLocaleLowerCase();
     return this.eventos.filter(
       (evento: { tema: string; }) => evento.tema.toLocaleLowerCase().indexOf(filtrarPor) !== -1
@@ -41,9 +51,10 @@ export class EventosComponent implements OnInit {
   }
 
   getEventos() {
-    this.http.get('http://localhost:5000/api/values').subscribe(
-      response => {this.eventos = response;
-      console.log;},
+    this.eventoService.getAllEvento().subscribe(
+      (_eventos: Evento[]) => {
+      this.eventos = _eventos ;
+      console.log(_eventos);},
       error => {console.log(error);}
     );
   }
