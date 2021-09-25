@@ -11,7 +11,6 @@ namespace ProAgil.WebAPI.Controllers
     public class EventoController : ControllerBase
     {
         private readonly IProAgilRepository _repo;
-
         public EventoController(IProAgilRepository repo)
         {
             _repo = repo;
@@ -55,7 +54,7 @@ namespace ProAgil.WebAPI.Controllers
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falhou");
             }
         }          
-        [HttpPost]
+        [HttpPost()]
         public async Task<IActionResult> Post(Evento model)
         {
             try
@@ -73,7 +72,7 @@ namespace ProAgil.WebAPI.Controllers
 
             return BadRequest();
         }      
-        [HttpPut]
+        [HttpPut("{EventoID}")]
         public async Task<IActionResult> Put(int EventoID, Evento model)
         {
             try
@@ -81,10 +80,13 @@ namespace ProAgil.WebAPI.Controllers
                 var evento = await _repo.GetEventoAsyncByID(EventoID, false);
                 if (evento == null) return NotFound();
 
+                //evento.Tema = model.Tema;
+
                 _repo.Update(model);
 
                 if (await _repo.SaveChangesAsync())
                 {
+                //    return Ok();
                     return Created($"/api/evento/{model.ID}", model);
                 }
             }
@@ -95,7 +97,7 @@ namespace ProAgil.WebAPI.Controllers
 
             return BadRequest();
         }         
-        [HttpDelete]
+        [HttpDelete("{EventoID}")]
         public async Task<IActionResult> Delete(int EventoID)
         {
             try
