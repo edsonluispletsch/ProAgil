@@ -7,6 +7,7 @@ import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { ptBrLocale } from 'ngx-bootstrap/locale';
 import { cloneWithOffset } from 'ngx-bootstrap/chronos/units/offset';
+import { ToastrService } from 'ngx-toastr';
 defineLocale('pt-br', ptBrLocale);
 
 @Component({
@@ -18,7 +19,9 @@ export class EventosComponent implements OnInit {
   eventosFiltrados: Evento[] = [];
   eventos: Evento[] = [];
   evento: Evento | any;
-  modoSalvar: String = 'post';
+  titulo: string = 'Eventos';
+  modoSalvar: string = 'post';
+  dataEvento: string = '';
   imagemLargura: number = 50;
   imagemMargem: number = 2;
   mostrarImagem = false;
@@ -30,7 +33,8 @@ export class EventosComponent implements OnInit {
     private eventoService: EventoService,
     private modalService: BsModalService,
     private fb: FormBuilder,
-    private localeService: BsLocaleService
+    private localeService: BsLocaleService,
+    private toastr: ToastrService
   ) {
     this.localeService.use('pt-br');
   }
@@ -72,8 +76,9 @@ export class EventosComponent implements OnInit {
       () => {
           template.hide();
           this.getEventos();
+          this.toastr.success('Deletado com sucesso!');
         }, error => {
-          console.log(error);
+          this.toastr.error(`Erro ao deletar registro: ${error}`);
         }
     );
   }
@@ -131,9 +136,10 @@ export class EventosComponent implements OnInit {
           (novoEvento) => {
             template.hide();
             this.getEventos();
+            this.toastr.success('Inserido com sucesso!');
           },
           (error) => {
-            console.log(error);
+            this.toastr.error(`Erro ao inserir registro: ${error}`);
           }
         );
       }
@@ -144,9 +150,10 @@ export class EventosComponent implements OnInit {
           () => {
             template.hide();
             this.getEventos();
+            this.toastr.success('Editado com sucesso!');
           },
           (error) => {
-            console.log(error);
+            this.toastr.error(`Erro ao alterar registro: ${error}`);
           }
         );
       }
@@ -157,10 +164,9 @@ export class EventosComponent implements OnInit {
     this.eventoService.getAllEvento().subscribe(
       (_eventos: Evento[]) => {
         this.eventos = _eventos;
-        console.log(_eventos);
       },
       (error) => {
-        console.log(error);
+        this.toastr.error(`Erro ao consultar registros: ${error}`);
       }
     );
   }

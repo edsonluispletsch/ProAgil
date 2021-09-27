@@ -68,10 +68,10 @@ namespace ProAgil.WebAPI.Controllers
             try
             {
                 var evento = _mapper.Map<Evento>(model);
-                _repo.Add(model);
+                _repo.Add(evento);
                 if (await _repo.SaveChangesAsync())
                 {
-                    return Created($"/api/evento/{model.ID}", _mapper.Map<EventoDto>(evento));
+                    return Created($"/api/evento/{evento.ID}", _mapper.Map<EventoDto>(evento));
                 }
             }
             catch (System.Exception ex)
