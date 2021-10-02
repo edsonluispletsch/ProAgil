@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
@@ -34,6 +37,91 @@ namespace ProAgil.WebAPI.Controllers
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falhou");
             }
         }
+        /*        [HttpPost("upload")]
+                public async Task<IActionResult> upload()
+                {
+                    try
+                    {
+                        //var file = Request.Form.Files[0];
+                        var folderName = Path.Combine("Resources", "Images");
+                        var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+
+                        //if (file.Length > 0)
+                        {
+                            //var filename = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName;
+                            var filename = "Teste.jpg";
+                            var fullPath = Path.Combine(pathToSave, filename.Replace("\"", " ").Trim());
+
+                            using (var stream = new FileStream(fullPath, FileMode.Create))
+                            {
+                                await Request.Form.Files[0].CopyToAsync(stream);
+                                //      await file.CopyToAsync(stream);
+                            }
+                            return Ok();
+                        }
+                    }
+                    catch (System.Exception ex)
+                    {
+                        return this.StatusCode(StatusCodes.Status500InternalServerError, $"Banco Dados Falhou {ex.Message}");
+                    }
+
+                    //return BadRequest("Erro ao tentar realizar upload");
+                }*/
+
+
+
+        /*        [HttpPost("upload")]
+                public async Task<IActionResult> OnPostUploadAsync(List<IFormFile> files)
+                {
+                    long size = files.Sum(f => f.Length);
+
+                    foreach (var formFile in files)
+                    {
+                        if (formFile.Length > 0)
+                        {
+                            var folderName = Path.Combine("Resources", "Images");
+                            var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                            var filePath = Path.GetTempFileName();
+                            var pathToSaveComp = Path.Combine(filePath, folderName);
+
+                            using (var stream = System.IO.File.Create(pathToSaveComp))
+                            {
+                                await formFile.CopyToAsync(stream);
+                            }
+                        }
+                    }
+
+                    // Process uploaded files
+                    // Don't rely on or trust the FileName property without validation.
+
+                    return Ok(new { count = files.Count, size });
+                }*/
+
+
+        [HttpPost("Upload")]
+        public async Task<IActionResult> Upload(IFormFile file)
+        {
+            try
+            {
+                if (file == null) return BadRequest("NULL FILE");
+                if (file.Length == 0) return BadRequest("Empty File");
+                var folderName = Path.Combine("Resources", "Images");
+                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                var filename = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName;
+                var fullPath = Path.Combine(pathToSave, filename.Replace("\"", " ").Trim());
+
+                using (var stream = new FileStream(fullPath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+                return Ok();
+            }
+            catch (System.Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao realizar upload da imagem {ex.Message}");
+            }
+        }
+
         [HttpGet("{EventoID}")]
         public async Task<IActionResult> Get(int EventoID)
         {
@@ -127,6 +215,5 @@ namespace ProAgil.WebAPI.Controllers
 
             return BadRequest();
         }
-
     }
 }
