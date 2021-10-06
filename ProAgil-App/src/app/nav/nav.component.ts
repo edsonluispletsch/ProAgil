@@ -22,7 +22,8 @@ export class NavComponent implements OnInit {
   }
 
   userName() {
-    return this.authService.decodeToken?.unique_name;
+    return sessionStorage.getItem('username');
+//    return this.authService.decodeToken?.unique_name;
   }
 
   entrar() {

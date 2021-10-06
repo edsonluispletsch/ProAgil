@@ -6,12 +6,16 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { ToastrModule } from 'ngx-toastr';
+import { TabsModule } from 'ngx-bootstrap/tabs';
+import { NgxMaskModule } from 'ngx-mask'
+import { NgxCurrencyModule } from 'ngx-currency';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { EventosComponent } from './eventos/eventos.component';
+import { EventoEditComponent } from './eventos/eventoEdit/eventoEdit.component';
 import { NavComponent } from './nav/nav.component';
 import { DateTimeFormatPipePipe } from './_helps/DateTimeFormatPipe.pipe';
 
@@ -30,6 +34,7 @@ import { AuthInterceptor } from './auth/auth.interceptor';
   declarations: [						
     AppComponent,
       EventosComponent,
+      EventoEditComponent,
       PalestrantesComponent,
       ContatosComponent,
       DashboardComponent,
@@ -42,8 +47,8 @@ import { AuthInterceptor } from './auth/auth.interceptor';
    ],
   imports: [
     BrowserModule,
-    BsDatepickerModule.forRoot(),
     BrowserAnimationsModule,
+    BsDatepickerModule.forRoot(),
     ToastrModule.forRoot({
       timeOut: 10000,
       preventDuplicates: true
@@ -54,7 +59,10 @@ import { AuthInterceptor } from './auth/auth.interceptor';
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TabsModule.forRoot(),
+    NgxMaskModule.forRoot(),
+    NgxCurrencyModule
   ],
   providers: [
     EventoService,
@@ -67,3 +75,4 @@ import { AuthInterceptor } from './auth/auth.interceptor';
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+

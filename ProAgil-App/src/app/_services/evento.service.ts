@@ -38,3 +38,5 @@ export class EventoService {
     return this.http.delete(`${this.baseURL}/${id}`);
   }  
 }
+
+export class SharedModule { }

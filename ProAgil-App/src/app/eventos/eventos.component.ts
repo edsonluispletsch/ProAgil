@@ -130,7 +130,7 @@ export class EventosComponent implements OnInit {
       imagemURL: ['', Validators.required],
       qtdPessoas: ['', [Validators.required, Validators.max(120000)]],
       telefone: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.email]]
     });
   }
 
