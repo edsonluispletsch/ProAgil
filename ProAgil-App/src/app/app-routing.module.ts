@@ -21,11 +21,11 @@ const routes: Routes = [
   {path : 'palestrantes', component: PalestrantesComponent, canActivate: [AuthGuard]},
   {path : 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
   {path : 'contatos', component: ContatosComponent, canActivate: [AuthGuard]},
-  //{path : '', redirectTo: 'user/login', pathMatch: 'full'},
-  //{path : '**', redirectTo: 'user/login', pathMatch: 'full'}
+  {path : '', redirectTo: 'user/login', pathMatch: 'full'},
+  {path : '**', redirectTo: 'user/login', pathMatch: 'full'}
   
-  {path : '', redirectTo: 'dashboard', pathMatch: 'full'},
-  {path : '**', redirectTo: 'dashboard', pathMatch: 'full'}
+  //{path : '', redirectTo: 'dashboard', pathMatch: 'full'},
+  //{path : '**', redirectTo: 'dashboard', pathMatch: 'full'}
 ];
 
 @NgModule({

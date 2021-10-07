@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import * as moment from 'moment';
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { ToastrService } from 'ngx-toastr';
 import { DateTimeFormatPipePipe } from 'src/app/_helps/DateTimeFormatPipe.pipe';
@@ -118,7 +119,7 @@ export class EventoEditComponent implements OnInit {
     this.eventoService.getEventoById(idEvento).subscribe((evento: Evento) => {
       this.evento = Object.assign({}, evento);
       this.fileNameToUpdate = evento.imagemURL?.toString();
-      this.imagemURL = `http://localhost:5001/resources/images/${this.evento.imagemURL}?_ts=${this.dataAtual}`;
+      this.imagemURL = `http://localhost:5000/resources/images/${this.evento.imagemURL}?_ts=${this.dataAtual}`;
       this.evento.imagemURL = '';
       this.registerForm.patchValue(this.evento);
 
@@ -155,8 +156,34 @@ export class EventoEditComponent implements OnInit {
     if (this.registerForm.get('imagemURL').value !== '') {
       this.eventoService.postUpload(this.file, nomeArquivo[2]).subscribe(() => {
         this.dataAtual = new Date().getMilliseconds().toString();
-        this.imagemURL = `http://localhost:5001/resources/images/${this.evento.imagemURL}?_ts=${this.dataAtual}`;
+        this.imagemURL = `http://localhost:5000/resources/images/${this.evento.imagemURL}?_ts=${this.dataAtual}`;
       });
+    }
+  }
+
+/*  onDateModelChange($event: NgbDateStruct | string, formControlName: string, datepickerInput: NgbInputDatepicker) {
+		const requiredLength = 10;
+		if (typeof $event !== 'string') return;
+		if ($event.length !== requiredLength) return;
+		if (!(formControlName in this.form.value)) throw new Error('Form control not found');
+
+
+		const date: Date = this.StringToDateAdapter($event, 'dd/mm/yyyy'); // convert string value to date
+		const ngbDate: NgbDateStruct = this.ngbDateAdapter.fromModel(date); // convert date to NgbDateStruct
+
+		if (moment(date).isValid()) {
+			this.form.patchValue({ [formControlName]: ngbDate }); // set value on form
+			datepickerInput.dateSelect.emit(NgbDate.from(ngbDate)); // manually emit datepicker change
+		}
+	}*/
+
+  StringToDateAdapter(date: string, format: string): Date {
+    if (!date) return null;
+  
+    switch (format) {
+      default:
+        const dateString = (date || '').split('/').reverse().join('-');
+        return moment(dateString).toDate();
     }
   }
 }
